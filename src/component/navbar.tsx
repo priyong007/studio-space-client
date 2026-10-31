@@ -18,12 +18,12 @@ export default function Navbar() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-50 w-full px-4 py-3">
-      <nav className="mx-auto flex max-w-[1440px] items-center justify-between rounded-full border border-gray-200/80 bg-white/90 px-5 py-3 shadow-[0_8px_30px_rgba(0,0,0,0.06)] backdrop-blur-xl">
+    <header className="sticky top-0 z-50 w-full border border-gray-200/80 bg-white/90 px-5 py-3 shadow-[0_8px_30px_rgba(0,0,0,0.06)] backdrop-blur-xl">
+      <nav className="mx-auto flex max-w-360 items-center justify-between   ">
 
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3">
-          <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 shadow-md shadow-orange-200">
+          <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-linear-to-br from-amber-400 to-orange-500 shadow-md shadow-orange-200">
             <Cuboid size={27} className="text-gray-900" />
             <span className="absolute -right-1 -top-1 h-3 w-3 rounded-full bg-emerald-400 ring-2 ring-white" />
           </div>
@@ -106,7 +106,7 @@ export default function Navbar() {
 
       {/* Mobile Navigation */}
       {isOpen && (
-        <div className="mx-auto mt-3 max-w-[1440px] rounded-2xl border border-gray-200 bg-white p-5 shadow-xl lg:hidden">
+        <div className="mx-auto mt-3 max-w-360 rounded-2xl border border-gray-200 bg-white p-5 shadow-xl lg:hidden">
           <div className="flex flex-col gap-2">
             {navLinks.map((link) => {
               const isActive = pathname === link.href;
