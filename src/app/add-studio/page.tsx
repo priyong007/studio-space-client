@@ -86,6 +86,18 @@ const AddStudioPage = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    const res = await fetch('http://localhost:8000/add-studio',{
+         method: 'POST',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formData)
+    });
+
+     const result = await res.json()
+    console.log(result)
+
+
     if (!session?.user) {
       alert('Please login first!');
       return;
