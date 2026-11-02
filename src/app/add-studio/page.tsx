@@ -141,7 +141,7 @@ const AddStudioPage = () => {
 
       alert('Studio listed successfully!');
 
-      router.push('/my-listings');
+      router.push('/my-listing');
     } catch (error) {
       console.error('Studio submission error:', error);
       alert('Something went wrong! Please try again.');
