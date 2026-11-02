@@ -1,26 +1,51 @@
+'use client';
 
-"use client";
+import Link from 'next/link';
+import { useState } from 'react';
+import { usePathname } from 'next/navigation';
+import { Cuboid, Moon, Menu, X, LogIn } from 'lucide-react';
+import { authClient } from '@/lib/auth-client';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 
-import Link from "next/link";
-import { useState } from "react";
-import { usePathname } from "next/navigation";
-import { Cuboid, Moon, Menu, X, LogIn } from "lucide-react";
+
+import {
+  ChevronDown,
+  PlusCircle,
+  LayoutDashboard,
+  CalendarDays,
+  LogOut,
+} from "lucide-react";
+
+
 
 const navLinks = [
-  { name: "Home", href: "/" },
-  { name: "Explore Studios", href: "/studios" },
-  { name: "How It Works", href: "/how-it-works" },
-  { name: "About Us", href: "/about" },
+  { name: 'Home', href: '/' },
+  { name: 'Explore Studios', href: '/studios' },
+  { name: 'How It Works', href: '/how-it-works' },
+  { name: 'About Us', href: '/about' },
 ];
 
 export default function Navbar() {
+  const { data: session } = authClient.useSession();
+
+  const user = session?.user;
+  console.log(user);
+  const handleSignout = () => {
+    authClient.signOut();
+  };
+
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-50 w-full border border-gray-200/80 bg-white/90 px-5 py-3 shadow-[0_8px_30px_rgba(0,0,0,0.06)] backdrop-blur-xl">
+    <div className=' w-full  border border-gray-200/80 bg-white/90 px-5 py-3 shadow-[0_8px_30px_rgba(0,0,0,0.06)] backdrop-blur-xl'>
+    <header className="sticky top-0 z-50 w-full max-w-7xl mx-auto ">
       <nav className="mx-auto flex max-w-360 items-center justify-between   ">
-
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3">
           <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-linear-to-br from-amber-400 to-orange-500 shadow-md shadow-orange-200">
@@ -49,8 +74,8 @@ export default function Navbar() {
                 href={link.href}
                 className={`rounded-full px-5 py-3 text-sm font-medium transition-all duration-300 ${
                   isActive
-                    ? " text-orange-500"
-                    : "text-gray-700 hover:bg-gray-100 hover:text-orange-500"
+                    ? ' text-orange-500'
+                    : 'text-gray-700 hover:bg-gray-100 hover:text-orange-500'
                 }`}
               >
                 {link.name}
@@ -70,27 +95,78 @@ export default function Navbar() {
             <Moon size={18} />
           </button>
 
-          <Link
-            href="/login"
-            className={`text-sm font-medium transition hover:text-orange-500 ${
-              pathname === "/login"
-                ? "text-orange-500"
-                : "text-gray-700"
-            }`}
-          >
-            Sign In
-          </Link>
+{user ? (
+  <Popover>
+    <PopoverTrigger>
+      <button className="flex items-center gap-2 rounded-full border border-gray-200 p-1.5 pr-3 transition hover:bg-gray-50">
+        <Avatar className="h-8 w-8">
+          <AvatarImage src={user.image as string} alt={user.name || "User"} />
+          <AvatarFallback>
+            {user.name?.charAt(0)?.toUpperCase()}
+          </AvatarFallback>
+        </Avatar>
 
-          <Link
-            href="/register"
-            className={`rounded-xl px-7 py-3 text-sm font-semibold text-white shadow-lg shadow-orange-200 transition hover:-translate-y-0.5 hover:bg-orange-600 ${
-              pathname === "/register"
-                ? "bg-orange-600"
-                : "bg-orange-500"
-            }`}
-          >
-            Register
-          </Link>
+        <span className="max-w-24 truncate text-sm font-semibold text-gray-800">
+          {user.name}
+        </span>
+
+        <ChevronDown size={16} className="text-gray-500" />
+      </button>
+    </PopoverTrigger>
+
+    <PopoverContent align="end" className="w-60 p-2">
+      <div className="border-b border-gray-100 px-3 py-2">
+        <p className="text-xs text-gray-400">Signed in as</p>
+        <p className="text-sm font-semibold text-gray-900">
+          {user.name}
+        </p>
+        <p className="truncate text-xs text-gray-500">
+          {user.email}
+        </p>
+      </div>
+
+      <div className="space-y-1 py-2">
+        <Link
+          href="/add-studio"
+          className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-gray-700 transition hover:bg-orange-50 hover:text-orange-500"
+        >
+          <PlusCircle size={17} />
+          Add New Studio
+        </Link>
+
+        <Link
+          href="/my-listing"
+          className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-gray-700 transition hover:bg-orange-50 hover:text-orange-500"
+        >
+          <LayoutDashboard size={17} />
+          My Studio Listings
+        </Link>
+
+        <Link
+          href="/my-bookings"
+          className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-gray-700 transition hover:bg-orange-50 hover:text-orange-500"
+        >
+          <CalendarDays size={17} />
+          My Bookings
+        </Link>
+      </div>
+
+      <div className="border-t border-gray-100 pt-2">
+        <button
+          onClick={handleSignout}
+          className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-red-500 transition hover:bg-red-50"
+        >
+          <LogOut size={17} />
+          Sign Out
+        </button>
+      </div>
+    </PopoverContent>
+  </Popover>
+) : (
+  <>
+    {/* তোমার আগের Sign In এবং Register links এখানে থাকবে */}
+  </>
+)}
         </div>
 
         {/* Mobile Menu Button */}
@@ -105,57 +181,120 @@ export default function Navbar() {
       </nav>
 
       {/* Mobile Navigation */}
-      {isOpen && (
-        <div className="mx-auto mt-3 max-w-360 rounded-2xl border border-gray-200 bg-white p-5 shadow-xl lg:hidden">
-          <div className="flex flex-col gap-2">
-            {navLinks.map((link) => {
-              const isActive = pathname === link.href;
+      {/* Mobile Navigation */}
+{isOpen && (
+  <div className="border-t border-gray-100 bg-white px-4 py-4 shadow-lg lg:hidden">
+    {/* Navigation Links */}
+    <div className="space-y-1">
+      {navLinks.map((link) => (
+        <Link
+          key={link.href}
+          href={link.href}
+          onClick={() => setIsOpen(false)}
+          className={`block rounded-xl px-4 py-3 text-sm font-medium transition ${
+            pathname === link.href
+              ? "bg-orange-100 text-orange-500"
+              : "text-gray-700 hover:bg-gray-100"
+          }`}
+        >
+          {link.name}
+        </Link>
+      ))}
+    </div>
 
-              return (
-                <Link
-                  key={link.name}
-                  href={link.href}
-                  onClick={() => setIsOpen(false)}
-                  className={`rounded-xl px-4 py-3 text-sm font-medium transition ${
-                    isActive
-                      ? "bg-orange-100 text-orange-500"
-                      : "text-gray-700 hover:bg-gray-100"
-                  }`}
-                >
-                  {link.name}
-                </Link>
-              );
-            })}
+    <hr className="my-3 border-gray-100" />
 
-            <hr className="my-2 border-gray-100" />
+    {user ? (
+      <>
+        {/* User Profile */}
+        <div className="flex items-center gap-3 rounded-xl bg-orange-50 p-4">
+          <Avatar className="h-11 w-11">
+            <AvatarImage
+              src={user.image as string}
+              alt={user.name || "User"}
+            />
+            <AvatarFallback>
+              {user.name?.charAt(0)?.toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
 
-            <Link
-              href="/login"
-              onClick={() => setIsOpen(false)}
-              className={`flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-medium transition ${
-                pathname === "/login"
-                  ? "bg-orange-100 text-orange-500"
-                  : "text-gray-700 hover:bg-gray-100"
-              }`}
-            >
-              <LogIn size={18} />
-              Sign In
-            </Link>
-
-            <Link
-              href="/register"
-              onClick={() => setIsOpen(false)}
-              className={`rounded-xl px-4 py-3 text-center text-sm font-semibold text-white transition hover:bg-orange-600 ${
-                pathname === "/register"
-                  ? "bg-orange-600"
-                  : "bg-orange-500"
-              }`}
-            >
-              Register
-            </Link>
+          <div className="min-w-0">
+            <p className="truncate text-sm font-semibold text-gray-900">
+              {user.name}
+            </p>
+            <p className="truncate text-xs text-gray-500">
+              {user.email}
+            </p>
           </div>
         </div>
-      )}
+
+        {/* User Menu */}
+        <div className="mt-3 space-y-1">
+          <Link
+            href="/add-studio"
+            onClick={() => setIsOpen(false)}
+            className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-gray-700 transition hover:bg-orange-50 hover:text-orange-500"
+          >
+            <PlusCircle size={18} />
+            Add New Studio
+          </Link>
+
+          <Link
+            href="/my-listing"
+            onClick={() => setIsOpen(false)}
+            className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-gray-700 transition hover:bg-orange-50 hover:text-orange-500"
+          >
+            <LayoutDashboard size={18} />
+            My Studio Listings
+          </Link>
+
+          <Link
+            href="/my-bookings"
+            onClick={() => setIsOpen(false)}
+            className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-gray-700 transition hover:bg-orange-50 hover:text-orange-500"
+          >
+            <CalendarDays size={18} />
+            My Bookings
+          </Link>
+        </div>
+
+        <hr className="my-3 border-gray-100" />
+
+        {/* Sign Out */}
+        <button
+          onClick={async () => {
+            await authClient.signOut();
+            setIsOpen(false);
+          }}
+          className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-red-500 transition hover:bg-red-50"
+        >
+          <LogOut size={18} />
+          Sign Out
+        </button>
+      </>
+    ) : (
+      <>
+        <Link
+          href="/login"
+          onClick={() => setIsOpen(false)}
+          className="flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-medium text-gray-700 transition hover:bg-gray-100"
+        >
+          <LogIn size={18} />
+          Sign In
+        </Link>
+
+        <Link
+          href="/register"
+          onClick={() => setIsOpen(false)}
+          className="mt-2 block rounded-xl bg-orange-500 px-4 py-3 text-center text-sm font-semibold text-white transition hover:bg-orange-600"
+        >
+          Register
+        </Link>
+      </>
+    )}
+  </div>
+)}
     </header>
+    </div>
   );
 }
