@@ -7,7 +7,7 @@ const categories = [
   {
     id: 1,
     name: "Photo Studios",
-    slug: "photo-studios",
+    slug: "photo-studio",
     description: "Perfect spaces for every shot.",
     image:
       "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1200&q=80",
@@ -16,7 +16,7 @@ const categories = [
   {
     id: 2,
     name: "Sound Stages",
-    slug: "sound-stages",
+    slug: "sound-stage",
     description: "Bring your productions to life.",
     image:
       "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=1200&q=80",
@@ -25,7 +25,7 @@ const categories = [
   {
     id: 3,
     name: "Podcast Rooms",
-    slug: "podcast-rooms",
+    slug: "podcast-room",
     description: "Make your voice heard.",
     image:
       "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&w=1200&q=80",
@@ -34,7 +34,7 @@ const categories = [
   {
     id: 4,
     name: "Music Suites",
-    slug: "music-suites",
+    slug: "music-suite",
     description: "Create your next masterpiece.",
     image:
       "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=1200&q=80",
@@ -43,7 +43,7 @@ const categories = [
   {
     id: 5,
     name: "Art Workshops",
-    slug: "art-workshops",
+    slug: "art-workshop",
     description: "A home for creative minds.",
     image:
       "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?auto=format&fit=crop&w=1200&q=80",

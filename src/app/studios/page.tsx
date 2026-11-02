@@ -1,8 +1,12 @@
 
 import Link from 'next/link';
-
-import { MapPin, Star, ArrowRight, Clock } from 'lucide-react';
 import Image from 'next/image';
+import {
+  MapPin,
+  Star,
+  ArrowRight,
+  Clock,
+} from 'lucide-react';
 
 interface Studio {
   _id: string;
@@ -15,7 +19,25 @@ interface Studio {
   rating?: number;
 }
 
-const AllStudiosPage = async () => {
+interface Props {
+  searchParams: Promise<{
+    category?: string;
+  }>;
+}
+
+// Manually defined categories
+const categories = [
+  { name: 'All Categories', slug: 'all' },
+  { name: 'Photo Studios', slug: 'photo-studio' },
+  { name: 'Sound Stages', slug: 'sound-stage' },
+  { name: 'Podcast Rooms', slug: 'podcast-room' },
+  { name: 'Music Suites', slug: 'music-suite' },
+  { name: 'Art Workshops', slug: 'art-workshop' },
+];
+
+const AllStudiosPage = async ({ searchParams }: Props) => {
+  const { category } = await searchParams;
+
   const res = await fetch('http://localhost:8000/studios', {
     cache: 'no-store',
   });
@@ -24,7 +46,28 @@ const AllStudiosPage = async () => {
     throw new Error('Failed to fetch studios');
   }
 
-  const data: Studio[] = await res.json();
+  const response = await res.json();
+
+  // Supports both an array and { result: [] } response
+  const data: Studio[] = Array.isArray(response)
+    ? response
+    : response.result ?? [];
+
+  // Filter studios using selected category
+  const filteredStudios = !category || category === 'all'
+    ? data
+    : data.filter((studio) => {
+        const studioSlug = studio.category
+          .toLowerCase()
+          .trim()
+          .replace(/\s+/g, '-');
+
+        return studioSlug === category;
+      });
+
+  const selectedCategory = categories.find(
+    (item) => item.slug === category
+  );
 
   return (
     <div className="min-h-screen bg-gray-50 px-4 py-16">
@@ -46,31 +89,62 @@ const AllStudiosPage = async () => {
           </p>
         </div>
 
+        {/* Category Filters */}
+        <div className="mb-10 flex flex-wrap justify-center gap-3">
+          {categories.map((item) => (
+            <Link
+              key={item.slug}
+              href={
+                item.slug === 'all'
+                  ? '/studios'
+                  : `/studios?category=${item.slug}`
+              }
+              className={`rounded-full border px-5 py-2.5 text-sm font-medium transition ${
+                (category || 'all') === item.slug
+                  ? 'border-black bg-black text-white'
+                  : 'border-gray-200 bg-white text-gray-600 hover:border-black hover:text-black'
+              }`}
+            >
+              {item.name}
+            </Link>
+          ))}
+        </div>
+
         {/* Results */}
         <div className="mb-6 flex items-center justify-between">
           <h2 className="text-xl font-semibold text-gray-800">
-            Available Studios
+            {selectedCategory?.name || 'Available Studios'}
           </h2>
 
           <p className="text-sm text-gray-500">
-            {data.length} {data.length === 1 ? 'Studio' : 'Studios'} found
+            {filteredStudios.length}{' '}
+            {filteredStudios.length === 1 ? 'Studio' : 'Studios'} found
           </p>
         </div>
 
         {/* Studio Grid */}
-        {data.length === 0 ? (
+        {filteredStudios.length === 0 ? (
           <div className="rounded-xl border bg-white py-20 text-center">
             <h3 className="text-xl font-semibold text-gray-800">
               No Studios Available
             </h3>
+
             <p className="mt-2 text-gray-500">
-              There are no studios listed at the moment.
+              No studios found in this category.
             </p>
+
+            <Link
+              href="/studios"
+              className="mt-5 inline-flex items-center gap-2 rounded-lg bg-black px-5 py-2.5 text-sm font-medium text-white hover:bg-gray-800"
+            >
+              Explore All Studios
+              <ArrowRight size={16} />
+            </Link>
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
 
-            {data.map((studio) => (
+            {filteredStudios.map((studio) => (
               <div
                 key={studio._id}
                 className="group overflow-hidden rounded-2xl border bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
@@ -92,7 +166,6 @@ const AllStudiosPage = async () => {
                     </div>
                   )}
 
-                  {/* Category Badge */}
                   <span className="absolute left-4 top-4 rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-gray-800 shadow-sm">
                     {studio.category}
                   </span>
@@ -116,7 +189,6 @@ const AllStudiosPage = async () => {
 
                   {/* Rating & Capacity */}
                   <div className="flex items-center justify-between border-y py-3">
-
                     <div className="flex items-center gap-1.5">
                       <Star
                         size={17}
@@ -129,16 +201,12 @@ const AllStudiosPage = async () => {
 
                     <div className="flex items-center gap-1.5 text-sm text-gray-500">
                       <Clock size={16} />
-                      <span>
-                        {studio.maxCapacity} Guests
-                      </span>
+                      <span>{studio.maxCapacity} Guests</span>
                     </div>
-
                   </div>
 
                   {/* Price & Button */}
                   <div className="flex items-center justify-between gap-3">
-
                     <div>
                       <p className="text-xs text-gray-500">
                         Hourly Rate
@@ -159,7 +227,6 @@ const AllStudiosPage = async () => {
                       View Details
                       <ArrowRight size={16} />
                     </Link>
-
                   </div>
 
                 </div>
@@ -168,7 +235,6 @@ const AllStudiosPage = async () => {
 
           </div>
         )}
-
       </div>
     </div>
   );
