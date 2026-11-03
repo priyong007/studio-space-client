@@ -143,7 +143,7 @@ export default function Navbar() {
         </Link>
 
         <Link
-          href="/my-bookings"
+          href="/my-booking"
           className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-gray-700 transition hover:bg-orange-50 hover:text-orange-500"
         >
           <CalendarDays size={17} />
@@ -165,6 +165,22 @@ export default function Navbar() {
 ) : (
   <>
     {/* তোমার আগের Sign In এবং Register links এখানে থাকবে */}
+    <div className="flex items-center gap-3">
+    <Link
+      href="/login"
+      className="flex items-center gap-2 rounded-full border border-gray-200 px-5 py-2.5 text-sm font-semibold text-gray-700 transition hover:border-orange-500 hover:text-orange-500"
+    >
+      <LogIn size={17} />
+      Sign In
+    </Link>
+
+    <Link
+      href="/register"
+      className="rounded-full bg-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-orange-200 transition hover:bg-orange-600"
+    >
+      Register
+    </Link>
+  </div>
   </>
 )}
         </div>
@@ -249,7 +265,7 @@ export default function Navbar() {
           </Link>
 
           <Link
-            href="/my-bookings"
+            href="/my-booking"
             onClick={() => setIsOpen(false)}
             className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-gray-700 transition hover:bg-orange-50 hover:text-orange-500"
           >

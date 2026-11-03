@@ -1,5 +1,3 @@
-
-
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -11,7 +9,8 @@ import {
   Clock,
   ArrowLeft,
 } from 'lucide-react';
-import BookingModal from '@/component/BookingModal';
+import ListCard from '@/component/mylistCard/page';
+// import BookingModal from '@/component/BookingModal';
 
 interface Studio {
   _id: string;
@@ -60,7 +59,6 @@ const StudioDetailPage = async ({
   return (
     <div className="min-h-screen bg-[#f7f8fa] px-4 py-8 md:py-12">
       <div className="mx-auto max-w-7xl">
-
         {/* Back Navigation */}
         <Link
           href="/studios"
@@ -88,19 +86,14 @@ const StudioDetailPage = async ({
           </h1>
 
           <div className="mt-4 flex flex-wrap items-center gap-2 text-sm text-gray-500">
-            <Star
-              size={17}
-              className="fill-amber-400 text-amber-400"
-            />
+            <Star size={17} className="fill-amber-400 text-amber-400" />
 
             {studio.rating ? (
               <span className="font-semibold text-gray-900">
                 {studio.rating} / 5
               </span>
             ) : (
-              <span className="font-medium text-gray-700">
-                New Workspace
-              </span>
+              <span className="font-medium text-gray-700">New Workspace</span>
             )}
 
             <span className="text-gray-300">|</span>
@@ -124,10 +117,8 @@ const StudioDetailPage = async ({
 
         {/* Main Content */}
         <div className="mt-12 grid items-start gap-10 lg:grid-cols-3">
-
           {/* Left Content */}
           <div className="space-y-10 lg:col-span-2">
-
             {/* Overview */}
             <section className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm md:p-8">
               <h2 className="text-2xl font-bold tracking-tight text-gray-950">
@@ -152,16 +143,13 @@ const StudioDetailPage = async ({
               </div>
 
               <div className="grid gap-4 sm:grid-cols-3">
-
                 {/* Capacity */}
                 <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md">
                   <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
                     <Users size={22} />
                   </div>
 
-                  <p className="text-sm text-gray-500">
-                    Maximum Capacity
-                  </p>
+                  <p className="text-sm text-gray-500">Maximum Capacity</p>
 
                   <p className="mt-2 text-xl font-bold text-gray-950">
                     {studio.maxCapacity}
@@ -177,9 +165,7 @@ const StudioDetailPage = async ({
                     <Clock size={22} />
                   </div>
 
-                  <p className="text-sm text-gray-500">
-                    Hourly Rate
-                  </p>
+                  <p className="text-sm text-gray-500">Hourly Rate</p>
 
                   <p className="mt-2 text-xl font-bold text-gray-950">
                     ${studio.hourlyRate}
@@ -195,15 +181,12 @@ const StudioDetailPage = async ({
                     <ShieldCheck size={22} />
                   </div>
 
-                  <p className="text-sm text-gray-500">
-                    Security Deposit
-                  </p>
+                  <p className="text-sm text-gray-500">Security Deposit</p>
 
                   <p className="mt-2 text-xl font-bold text-gray-950">
                     ${studio.securityDeposit}
                   </p>
                 </div>
-
               </div>
             </section>
 
@@ -266,7 +249,7 @@ const StudioDetailPage = async ({
             </section>
 
             {/* Reviews */}
-            <section>
+            <section id="reviews" className="scroll-mt-24">
               <h2 className="text-2xl font-bold text-gray-950">
                 Guest Reviews
               </h2>
@@ -304,10 +287,7 @@ const StudioDetailPage = async ({
                 </div>
               ) : (
                 <div className="mt-6 rounded-2xl border border-dashed border-gray-300 bg-white p-8 text-center">
-                  <Star
-                    size={28}
-                    className="mx-auto text-gray-300"
-                  />
+                  <Star size={28} className="mx-auto text-gray-300" />
 
                   <p className="mt-3 font-semibold text-gray-800">
                     No reviews yet
@@ -319,79 +299,12 @@ const StudioDetailPage = async ({
                 </div>
               )}
             </section>
-
           </div>
 
           {/* Booking Sidebar */}
-          <aside className="lg:sticky lg:top-24">
-            <div className="overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-lg">
 
-              {/* Price Header */}
-              <div className="bg-orange-500 p-7 text-white">
-                <p className="text-sm text-gray-200">
-                  Starting from
-                </p>
-
-                <h2 className="mt-2 text-4xl font-bold tracking-tight">
-                  ${studio.hourlyRate}
-
-                  <span className="ml-1 text-base font-normal text-gray-200">
-                    / hour
-                  </span>
-                </h2>
-
-                <p className="mt-3 text-sm text-gray-200">
-                  Book your creative space with ease.
-                </p>
-              </div>
-
-              {/* Booking Information */}
-              <div className="p-6">
-                <div className="space-y-5">
-
-                  <div className="flex items-center justify-between gap-3 text-sm">
-                    <span className="text-gray-500">
-                      Security Deposit
-                    </span>
-
-                    <span className="font-semibold text-gray-900">
-                      ${studio.securityDeposit}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center justify-between gap-3 text-sm">
-                    <span className="text-gray-500">
-                      Maximum Capacity
-                    </span>
-
-                    <span className="font-semibold text-gray-900">
-                      {studio.maxCapacity} People
-                    </span>
-                  </div>
-
-                  <div className="flex items-center justify-between gap-3 text-sm">
-                    <span className="text-gray-500">
-                      Category
-                    </span>
-
-                    <span className="font-semibold text-gray-900">
-                      {studio.category}
-                    </span>
-                  </div>
-
-                </div>
-
-                <div className="my-6 border-t border-gray-100" />
-
-                <BookingModal studio={studio} />
-
-                <p className="mt-4 text-center text-xs leading-5 text-gray-400">
-                  You won&apos;t be charged until your booking is confirmed.
-                </p>
-              </div>
-            </div>
-          </aside>
-
+        <ListCard studio={studio}/>
+          
         </div>
       </div>
     </div>
@@ -399,4 +312,3 @@ const StudioDetailPage = async ({
 };
 
 export default StudioDetailPage;
-

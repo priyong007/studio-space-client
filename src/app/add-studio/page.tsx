@@ -1,10 +1,8 @@
 
-
 'use client';
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-
 
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -17,6 +15,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { authClient } from '@/lib/auth-client';
+import { toast } from 'react-toastify';
+
 
 
 const categories = [
@@ -86,18 +86,6 @@ const AddStudioPage = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const res = await fetch('http://localhost:8000/add-studio',{
-         method: 'POST',
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(formData)
-    });
-
-     const result = await res.json()
-    console.log(result)
-
-
     if (!session?.user) {
       alert('Please login first!');
       return;
@@ -126,30 +114,35 @@ const AddStudioPage = () => {
       createdAt: new Date().toISOString(),
     };
 
-    try {
-      const response = await fetch('http://localhost:8000/studios', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(studioData),
-      });
+ try {
+  const response = await fetch('http://localhost:8000/add-studio', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(studioData),
+  });
 
-      if (!response.ok) {
-        throw new Error('Failed to add studio');
-      }
+  if (!response.ok) {
+    throw new Error('Failed to add studio');
+  }
 
-      alert('Studio listed successfully!');
+  toast.success('Studio listed successfully!');
 
-      router.push('/my-listing');
-    } catch (error) {
-      console.error('Studio submission error:', error);
-      alert('Something went wrong! Please try again.');
-    } finally {
-      setLoading(false);
-    }
+  router.push('/studios');
+
+} catch (error) {
+  console.error('Studio submission error:', error);
+
+  toast.info('Something went wrong! Please try again.');
+
+} finally {
+  setLoading(false);
+}
   };
-console.log(formData)
+
+  console.log(formData);
+
   return (
     <div className="min-h-screen bg-gray-50 px-4 py-12">
       <div className="mx-auto max-w-3xl">
@@ -196,7 +189,7 @@ console.log(formData)
               onValueChange={(value) =>
                 setFormData((prev) => ({
                   ...prev,
-                  category: value ?? "",
+                  category: value ?? '',
                 }))
               }
             >
