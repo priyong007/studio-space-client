@@ -1,5 +1,7 @@
 'use client'
 import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
+
 import React from "react";
 
 interface Studio {
@@ -21,24 +23,54 @@ interface ListCardProps {
 
 const ListCard = ({ studio }: ListCardProps) => {
 
+    const router = useRouter();
+
       const { data: session } = authClient.useSession();
       const user = session?.user;
     console.log(studio)
 
-    const handleList =  async (
+const handleList = async (
   e: React.FormEvent<HTMLFormElement>
 ): Promise<void> => {
-    e.preventDefault()
+  e.preventDefault();
 
-    const data = {
-        username: user?.name,
-        email: user?.email,
-        // image: user?.image,
-        ...studio,
-        
+  if (!user) {
+    alert("Please login first!");
+    return;
+  }
+
+  try {
+    const { _id, ...rest } = studio;
+
+const data = {
+  ...rest,
+  studioId: _id,
+  username: user.name,
+  email: user.email,
+};
+
+    const res = await fetch("http://localhost:8000/listing", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    const listData = await res.json();
+
+    if (res.ok) {
+      alert("Studio added to your list successfully!");
+      router.refresh(); 
+      router.push("/my-listing");
+    } else {
+      alert(listData.message || "Failed to add studio!");
     }
-    console.log(data)
-}
+  } catch (error) {
+    console.error("Error:", error);
+    alert("Something went wrong!");
+  }
+};
 
   return (
     <aside className="lg:sticky lg:top-24">
@@ -87,7 +119,7 @@ const ListCard = ({ studio }: ListCardProps) => {
           <div className="my-6 border-t border-gray-100" />
         <form onSubmit={handleList} action="">
 
-          <button className="mx-auto flex items-center justify-center gap-2 rounded-xl bg-orange-500 px-8 py-3 font-semibold text-white shadow-lg shadow-orange-200 transition-all duration-300 hover:-translate-y-1 hover:bg-orange-600 hover:shadow-xl active:scale-95">
+          <button type="submit" className="mx-auto flex items-center justify-center gap-2 rounded-xl bg-orange-500 px-8 py-3 font-semibold text-white shadow-lg shadow-orange-200 transition-all duration-300 hover:-translate-y-1 hover:bg-orange-600 hover:shadow-xl active:scale-95">
             Add to my list
           </button>
 

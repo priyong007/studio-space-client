@@ -26,7 +26,7 @@ import {
 const navLinks = [
   { name: 'Home', href: '/' },
   { name: 'Explore Studios', href: '/studios' },
-  { name: 'How It Works', href: '/how-it-works' },
+  { name: 'How It Works', href: '/works' },
   { name: 'About Us', href: '/about' },
 ];
 

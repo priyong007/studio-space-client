@@ -3,7 +3,7 @@ import React from 'react';
 const MyBookingPage = () => {
     return (
         <div>
-            my booking
+            my booking page
         </div>
     );
 };
