@@ -1,3 +1,4 @@
+import FeatureSection from "@/component/featured";
 import StudioCategories from "@/component/studio-categories";
 import StudioHero from "@/component/studioHero";
 
@@ -7,6 +8,7 @@ export default function Home() {
     <div>
       <StudioHero/>
       <StudioCategories/>
+      <FeatureSection/>
     </div>
   );
 }
