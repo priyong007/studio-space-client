@@ -30,7 +30,7 @@ const ListCard = ({ studio }: ListCardProps) => {
     console.log(studio)
 
 const handleList = async (
-  e: React.FormEvent<HTMLFormElement>
+  e: React.MouseEvent<HTMLButtonElement>
 ): Promise<void> => {
   e.preventDefault();
 
@@ -68,6 +68,45 @@ const data = {
     }
   } catch (error) {
     console.error("Error:", error);
+    alert("Something went wrong!");
+  }
+};
+
+const handleBook = async () => {
+  if (!user) {
+    alert("Please login first!");
+    return;
+  }
+
+  try {
+    const { _id, ...rest } = studio;
+
+    const bookingData = {
+      ...rest,
+      studioId: _id,
+      username: user.name,
+      email: user.email,
+    };
+    
+
+    const res = await fetch("http://localhost:8000/booking", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(bookingData),
+    });
+
+    const result = await res.json();
+
+    if (res.ok) {
+      alert("Studio added to your booking successfully!");
+      router.push("/my-booking");
+    } else {
+      alert(result.message || "Booking failed!");
+    }
+  } catch (error) {
+    console.error(error);
     alert("Something went wrong!");
   }
 };
@@ -117,13 +156,26 @@ const data = {
           </div>
 
           <div className="my-6 border-t border-gray-100" />
-        <form onSubmit={handleList} action="">
+        
 
-          <button type="submit" className="mx-auto flex items-center justify-center gap-2 rounded-xl bg-orange-500 px-8 py-3 font-semibold text-white shadow-lg shadow-orange-200 transition-all duration-300 hover:-translate-y-1 hover:bg-orange-600 hover:shadow-xl active:scale-95">
+          <div className="flex gap-2">
+
+            <button type="button"
+    onClick={handleList} className="mx-auto flex items-center justify-center gap-2 rounded-xl bg-orange-500 px-8 py-3 font-semibold text-white shadow-lg shadow-orange-200 transition-all duration-300 hover:-translate-y-1 hover:bg-orange-600 hover:shadow-xl active:scale-95">
             Add to my list
           </button>
 
-        </form>
+
+          <button type="button"
+          onClick={handleBook}
+           className="mx-auto flex items-center justify-center gap-2 rounded-xl bg-orange-500 px-8 py-3 font-semibold text-white shadow-lg shadow-orange-200 transition-all duration-300 hover:-translate-y-1 hover:bg-orange-600 hover:shadow-xl active:scale-95">
+            Add to book
+          </button>
+
+          </div>
+
+          
+
         </div>
       </div>
     </aside>

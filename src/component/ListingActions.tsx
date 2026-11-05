@@ -2,7 +2,8 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { Eye, Pencil, Trash2, Loader2 } from 'lucide-react';
+import { Eye, Trash2, Loader2 } from 'lucide-react';
+import EditStudioDialouge from './EditStudioDialouge';
 
 interface ListingActionsProps {
   id: string; // listing er nijer _id (delete/edit er jonno)
@@ -52,14 +53,9 @@ const ListingActions = ({ id, studioId }: ListingActionsProps) => {
       </Link>
 
       {/* Edit */}
-      <Link
-        href={`/edit-listing/${id}`}
-        title="Edit"
-        aria-label="Edit listing"
-        className={`${iconBtn} bg-amber-50 text-amber-600 hover:bg-amber-100`}
-      >
-        <Pencil size={16} />
-      </Link>
+      
+
+      <EditStudioDialouge studio={{ id }} />
 
       {/* Delete */}
       <button

@@ -1,4 +1,4 @@
-import React from 'react';
+
 import Image from 'next/image';
 import Link from 'next/link';
 import {
@@ -10,6 +10,7 @@ import {
   ArrowLeft,
 } from 'lucide-react';
 import ListCard from '@/component/mylistCard/page';
+import EditStudioDialog from '@/component/EditStudioDialouge';
 // import BookingModal from '@/component/BookingModal';
 
 interface Studio {
@@ -51,7 +52,7 @@ const StudioDetailPage = async ({
 
   const data = await res.json();
 
-  const studio: Studio = data.result ?? data;
+  const studio:Studio = data;
 
   const amenities = studio.amenities ?? [];
   const reviews = studio.reviews ?? [];
@@ -304,6 +305,7 @@ const StudioDetailPage = async ({
           {/* Booking Sidebar */}
 
         <ListCard studio={studio}/>
+        <EditStudioDialog studio={{ ...studio, id: studio._id }} />
           
         </div>
       </div>
