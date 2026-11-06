@@ -26,11 +26,14 @@ const MyBookingPage = async () => {
   }
 
   const res = await fetch(
-    `http://localhost:8000/my-booking/${user.email}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/my-booking/${user.email}`,
     { cache: "no-store" }
+
   );
+  console.log(" user email",user.email)
 
   const bookingData: Booking[] = await res.json();
+  console.log("booking data ",bookingData)
 
   return (
     <div className="min-h-screen bg-[#fafafa] px-4 py-10 sm:px-6">

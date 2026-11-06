@@ -1,3 +1,4 @@
+'use client'
 import Image from "next/image";
 
 interface Studio {
@@ -63,7 +64,7 @@ const FeatureSection = async ({ searchParams }: Props) => {
   let data: Studio[] = [];
 
   try {
-    const res = await fetch("http://localhost:8000/studios", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/studios`, {
       cache: "no-store",
     });
 

@@ -10,7 +10,26 @@ interface ListingActionsProps {
   studioId?: string; // original studio id (view details er jonno)
 }
 
-const ListingActions = ({ id, studioId }: ListingActionsProps) => {
+interface Studio {
+  _id: string;
+  title: string;
+  category: string;
+  hourlyRate: number | string;
+  securityDeposit: number | string;
+  maxCapacity: number | string;
+  location: string;
+  imageUrl: string;
+  overview: string;
+  amenities?: string[];
+}
+
+interface ListingActionsProps {
+  id: string;
+  studioId?: string;
+  studioData?: Studio;
+}
+
+const ListingActions = ({ id,studioData, studioId }: ListingActionsProps) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -19,11 +38,11 @@ const ListingActions = ({ id, studioId }: ListingActionsProps) => {
 
     try {
       setLoading(true);
-      const res = await fetch(`http://localhost:8000/my-listing/${id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/my-listing/${id}`, {
         method: 'DELETE',
       });
       const data = await res.json();
-
+console.log({data})
       if (res.ok) {
         router.refresh();
       } else {
@@ -55,7 +74,7 @@ const ListingActions = ({ id, studioId }: ListingActionsProps) => {
       {/* Edit */}
       
 
-      <EditStudioDialouge studio={{ id }} />
+      {studioData && <EditStudioDialouge studio={studioData} />}
 
       {/* Delete */}
       <button

@@ -86,6 +86,10 @@ const AddStudioPage = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    
+
+    
+
     if (!session?.user) {
       alert('Please login first!');
       return;
@@ -115,7 +119,7 @@ const AddStudioPage = () => {
     };
 
  try {
-  const response = await fetch('http://localhost:8000/add-studio', {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/add-studio`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

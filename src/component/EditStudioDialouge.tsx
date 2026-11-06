@@ -76,14 +76,31 @@ const initialForm = {
       imageUrl: '',
       overview: '',
     }
+interface Studio {
+  _id: string;
+  id?: string;
+  title: string;
+  category: string;
+  hourlyRate: number | string;
+  securityDeposit: number | string;
+  maxCapacity: number | string;
+  location: string;
+  imageUrl: string;
+  overview: string;
+  amenities?: string[];
+}
+
+interface EditStudioDialogProps {
+  studio: Studio;
+}
 
 
 
 
 
-const EditStudioDialog = ({ studio }: { studio: { id: string } }) => {
+const EditStudioDialog = ({ studio }: EditStudioDialogProps) => {
 
-    console.log('id check',studio)
+    // console.log('id check',studio)
   const router = useRouter();
   
     const { data: session } = authClient.useSession();
@@ -147,7 +164,7 @@ const EditStudioDialog = ({ studio }: { studio: { id: string } }) => {
       };
   
    try {
-    const response = await fetch('http://localhost:8000/add-studio', {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/add-studio`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -201,6 +218,7 @@ const EditStudioDialog = ({ studio }: { studio: { id: string } }) => {
             </label>
 
             <Input
+            defaultValue={studio?.title}
               name="title"
               placeholder="Enter studio title"
               value={formData.title}

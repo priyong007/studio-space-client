@@ -20,7 +20,7 @@ const CancelBookingButton = ({ bookingId }: { bookingId: string }) => {
       setLoading(true);
 
       const res = await fetch(
-        `http://localhost:8000/my-booking/${bookingId}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/my-booking/${bookingId}`,
         {
           method: "DELETE",
         }

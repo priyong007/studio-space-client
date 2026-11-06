@@ -164,7 +164,7 @@ export default function Navbar() {
   </Popover>
 ) : (
   <>
-    {/* তোমার আগের Sign In এবং Register links এখানে থাকবে */}
+    
     <div className="flex items-center gap-3">
     <Link
       href="/login"

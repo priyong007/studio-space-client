@@ -7,6 +7,7 @@ import Link from 'next/link';
 interface Studio {
   _id: string;
   title: string;
+   studioId: string;
   category: string;
   hourlyRate: number;
   securityDeposit: number;
@@ -31,7 +32,7 @@ const MyListingPage = async () => {
   }
 
   const res = await fetch(
-    `http://localhost:8000/my-listing/${encodeURIComponent(user.email)}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/my-listing/${user.email}`,
     {
       cache: 'no-store',
     },
@@ -47,7 +48,7 @@ const MyListingPage = async () => {
     ? response
     : (response.result ?? []);
 
-  console.log(listingData);
+  console.log({listingData});
 
   return (
     <div className="min-h-screen bg-[#fafafa] px-4 py-10 md:px-8">
@@ -166,7 +167,7 @@ const MyListingPage = async () => {
 
                       {/* Actions */}
                       <td className="px-5 py-4">
-                        <ListingActions id={studio._id} />
+                        <ListingActions id={studio.studioId} studioData={studio} />
                       </td>
                     </tr>
                   ))}

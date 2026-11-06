@@ -3,6 +3,7 @@ import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 
 import React from "react";
+import { toast } from "react-toastify";
 
 interface Studio {
   _id: string;
@@ -28,28 +29,23 @@ const ListCard = ({ studio }: ListCardProps) => {
       const { data: session } = authClient.useSession();
       const user = session?.user;
     console.log(studio)
+    console.log(user)
 
 const handleList = async (
   e: React.MouseEvent<HTMLButtonElement>
 ): Promise<void> => {
   e.preventDefault();
 
-  if (!user) {
-    alert("Please login first!");
-    return;
-  }
-
   try {
     const { _id, ...rest } = studio;
 
-const data = {
-  ...rest,
-  studioId: _id,
-  username: user.name,
-  email: user.email,
-};
+    const data = {
+      ...rest,
+      studioId: _id,
+      email:user?.email
+    };
 
-    const res = await fetch("http://localhost:8000/listing", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/listing`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -60,11 +56,10 @@ const data = {
     const listData = await res.json();
 
     if (res.ok) {
-      alert("Studio added to your list successfully!");
-      router.refresh(); 
+      toast.success("Studio added to your list successfully!");
       router.push("/my-listing");
     } else {
-      alert(listData.message || "Failed to add studio!");
+      toast.error(listData.message || "Failed to add studio!");
     }
   } catch (error) {
     console.error("Error:", error);
@@ -73,21 +68,14 @@ const data = {
 };
 
 const handleBook = async () => {
-  if (!user) {
-    alert("Please login first!");
-    return;
-  }
-
   try {
     const { _id, ...rest } = studio;
 
     const bookingData = {
       ...rest,
       studioId: _id,
-      username: user.name,
-      email: user.email,
+      email:user?.email
     };
-    
 
     const res = await fetch("http://localhost:8000/booking", {
       method: "POST",
@@ -100,14 +88,14 @@ const handleBook = async () => {
     const result = await res.json();
 
     if (res.ok) {
-      alert("Studio added to your booking successfully!");
+      toast.success("Studio added to your booking successfully!");
       router.push("/my-booking");
     } else {
-      alert(result.message || "Booking failed!");
+      toast.error(result.message || "Booking failed!");
     }
   } catch (error) {
     console.error(error);
-    alert("Something went wrong!");
+    toast.info("Something went wrong!");
   }
 };
 
