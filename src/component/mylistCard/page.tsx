@@ -63,7 +63,7 @@ const handleList = async (
     }
   } catch (error) {
     console.error("Error:", error);
-    alert("Something went wrong!");
+    toast.info("Something went wrong!");
   }
 };
 

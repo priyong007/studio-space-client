@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Eye, Trash2, Loader2 } from 'lucide-react';
 import EditStudioDialouge from './EditStudioDialouge';
+import { toast } from 'react-toastify';
 
 interface ListingActionsProps {
   id: string; // listing er nijer _id (delete/edit er jonno)
@@ -44,6 +45,7 @@ const ListingActions = ({ id,studioData, studioId }: ListingActionsProps) => {
       const data = await res.json();
 console.log({data})
       if (res.ok) {
+        toast.success('Listing deleted successfully!');
         router.refresh();
       } else {
         alert(data.message || 'Failed to delete!');
