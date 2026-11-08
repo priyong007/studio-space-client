@@ -6,11 +6,11 @@ StudioSpace is a creative space marketplace where users can discover, explore, a
 
 Key Features
 
-1 User Authentication: 
-2 Secure user registration,
-3 login,
-4 Google login
-5 and session management using Better Auth.
+1. User Authentication: 
+2. Secure user registration,
+3. login,
+4. Google login
+5. and session management using Better Auth.
 
 Explore Studios: Browse different creative spaces with detailed information, categories, pricing, and locations.
 
