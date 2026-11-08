@@ -1,5 +1,9 @@
-'use client'
+
+'use client';
+
+import { MapPin } from "lucide-react";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 interface Studio {
   _id: string;
@@ -17,71 +21,47 @@ interface Studio {
 }
 
 interface Props {
-  searchParams?: Promise<{
-    category?: string;
-  }>;
+  category?: string;
 }
 
-// const categories = [
-//   {
-//     name: "All",
-//     slug: "all",
-//   },
-//   {
-//     name: "Photo Studio",
-//     slug: "photo-studio",
-//   },
-//   {
-//     name: "Film Stage",
-//     slug: "film-stage",
-//   },
-//   {
-//     name: "Podcast Lounge",
-//     slug: "podcast-lounge",
-//   },
-//   {
-//     name: "Music Suite",
-//     slug: "music-suite",
-//   },
-//   {
-//     name: "Workshop",
-//     slug: "workshop",
-//   },
-//   {
-//     name: "Event Space",
-//     slug: "event-space",
-//   },
-//   {
-//     name: "Creative Studio",
-//     slug: "creative-studio",
-//   },
-// ];
+const FeatureSection = ({ category }: Props) => {
+  const [data, setData] = useState<Studio[]>([]);
+  const [loading, setLoading] = useState(true);
 
-const FeatureSection = async ({ searchParams }: Props) => {
-  // searchParams undefined hole empty object use korbe
-  const { category } = (await searchParams) ?? {};
+  // Fetch studios
+  useEffect(() => {
+    const fetchStudios = async () => {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/studios`,
+          {
+            cache: "no-store",
+          }
+        );
 
-  let data: Studio[] = [];
+        if (!res.ok) {
+          throw new Error("Failed to fetch studios");
+        }
 
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/studios`, {
-      cache: "no-store",
-    });
+        const result = await res.json();
 
-    if (!res.ok) {
-      throw new Error("Failed to fetch studios");
-    }
+        const studios = Array.isArray(result)
+          ? result
+          : Array.isArray(result.result)
+            ? result.result
+            : [];
 
-    const result = await res.json();
+        setData(studios);
+      } catch (error) {
+        console.error("Studio fetch error:", error);
+        setData([]);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    data = Array.isArray(result)
-      ? result
-      : Array.isArray(result.result)
-        ? result.result
-        : [];
-  } catch (error) {
-    console.error("Studio fetch error:", error);
-  }
+    fetchStudios();
+  }, []);
 
   // Category filter
   const filteredStudios = data.filter((studio) => {
@@ -97,53 +77,18 @@ const FeatureSection = async ({ searchParams }: Props) => {
     return studioCategory === category;
   });
 
-  // Maximum 6 ta card show korbe
+  // Maximum 6 cards
   const limitedStudios = filteredStudios.slice(0, 6);
 
   return (
     <section className="py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
-        {/* Section Heading */}
-
-        {/* <div className="mb-10 text-center">
-          <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-primary">
-            Explore Our Spaces
+        {loading ? (
+          <p className="py-16 text-center text-gray-500">
+            Loading studios...
           </p>
-
-          <h2 className="text-3xl font-bold tracking-tight text-gray-900 md:text-4xl">
-            Featured Creative Studios
-          </h2>
-
-          <p className="mx-auto mt-4 max-w-2xl text-gray-500">
-            Discover the perfect creative space for your next project.
-          </p>
-        </div> */}
-
-        {/* Category Filter */}
-
-        {/* <div className="mb-10 flex flex-wrap justify-center gap-3">
-          {categories.map((item) => (
-            <a
-              key={item.slug}
-              href={
-                item.slug === "all"
-                  ? "/studios"
-                  : `/studios?category=${item.slug}`
-              }
-              className={`rounded-full border px-5 py-2 text-sm font-medium transition ${
-                (category || "all") === item.slug
-                  ? "border-primary bg-primary text-white"
-                  : "border-gray-200 bg-white text-gray-600 hover:border-primary hover:text-primary"
-              }`}
-            >
-              {item.name}
-            </a>
-          ))}
-        </div> */}
-
-        {/* Studio Cards */}
-        {limitedStudios.length > 0 ? (
+        ) : limitedStudios.length > 0 ? (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {limitedStudios.map((studio) => (
               <div
@@ -153,8 +98,8 @@ const FeatureSection = async ({ searchParams }: Props) => {
                 {/* Image */}
                 <div className="relative h-56 overflow-hidden">
                   <Image
-                  width={200}
-                  height={200}
+                    width={200}
+                    height={200}
                     src={studio.imageUrl}
                     alt={studio.title}
                     className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
@@ -172,7 +117,7 @@ const FeatureSection = async ({ searchParams }: Props) => {
                   </h3>
 
                   <p className="mb-4 flex items-center gap-2 text-sm text-gray-500">
-                    <span>📍</span>
+                    <span><MapPin size={16} className="shrink-0 text-gray-500" /></span>
                     {studio.location}
                   </p>
 
@@ -216,6 +161,7 @@ const FeatureSection = async ({ searchParams }: Props) => {
             </p>
           </div>
         )}
+
       </div>
     </section>
   );

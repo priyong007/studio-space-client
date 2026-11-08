@@ -31,7 +31,7 @@ const navLinks = [
 ];
 
 export default function Navbar() {
-  const { data: session } = authClient.useSession();
+  const { data: session, isPending } = authClient.useSession();
 
   const user = session?.user;
   console.log(user);
@@ -41,7 +41,9 @@ export default function Navbar() {
 
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
-
+  if(isPending){
+    <div>loading</div>
+  }
   return (
     <div className=' w-full  border border-gray-200/80 bg-white/90 px-5 py-3 shadow-[0_8px_30px_rgba(0,0,0,0.06)] backdrop-blur-xl'>
     <header className="sticky top-0 z-50 w-full max-w-7xl mx-auto ">
